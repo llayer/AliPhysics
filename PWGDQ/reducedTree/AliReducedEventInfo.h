@@ -198,7 +198,7 @@ class AliReducedEventInfo : public AliReducedBaseEvent {
   AliReducedEventInfo(const AliReducedEventInfo &c);
   AliReducedEventInfo& operator= (const AliReducedEventInfo &c);
 
-  ClassDef(AliReducedEventInfo, 6);
+  ClassDef(AliReducedEventInfo, 7);
 };
 
 #endif

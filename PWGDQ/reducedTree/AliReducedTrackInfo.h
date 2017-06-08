@@ -170,7 +170,7 @@ class AliReducedTrackInfo : public AliReducedBaseTrack {
   AliReducedTrackInfo(const AliReducedTrackInfo &c);
   AliReducedTrackInfo& operator= (const AliReducedTrackInfo &c);
 
-  ClassDef(AliReducedTrackInfo, 4);
+  ClassDef(AliReducedTrackInfo, 5);
 };
 
 //_______________________________________________________________________________

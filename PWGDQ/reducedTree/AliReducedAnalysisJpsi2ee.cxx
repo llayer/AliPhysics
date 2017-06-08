@@ -10,6 +10,7 @@ using std::endl;
 
 #include <TClonesArray.h>
 #include <TIterator.h>
+#include <TTree.h>
 
 #include "AliReducedVarManager.h"
 #include "AliReducedEventInfo.h"
@@ -27,6 +28,7 @@ AliReducedAnalysisJpsi2ee::AliReducedAnalysisJpsi2ee() :
   AliReducedAnalysisTaskSE(),
   fHistosManager(new AliHistogramManager("Histogram Manager", AliReducedVarManager::kNVars)),
   fMixingHandler(new AliMixingHandler()),
+  fOutputTree(0),
   fOptionRunMixing(kTRUE),
   fOptionRunPairing(kTRUE),
   fOptionRunOverMC(kFALSE),
@@ -54,6 +56,7 @@ AliReducedAnalysisJpsi2ee::AliReducedAnalysisJpsi2ee(const Char_t* name, const C
   AliReducedAnalysisTaskSE(name,title),
   fHistosManager(new AliHistogramManager("Histogram Manager", AliReducedVarManager::kNVars)),
   fMixingHandler(new AliMixingHandler()),
+  fOutputTree(0),
   fOptionRunMixing(kTRUE),
   fOptionRunPairing(kTRUE),
   fOptionRunOverMC(kFALSE),
@@ -198,6 +201,10 @@ void AliReducedAnalysisJpsi2ee::Init() {
    fHistosManager->SetDefaultVarNames(AliReducedVarManager::fgVariableNames,AliReducedVarManager::fgVariableUnits);
    
    fMixingHandler->SetHistogramManager(fHistosManager);
+   
+   // Initialize the output tree 
+   fOutputTree = new TTree("jpsi2eeTree", "fOutputTree");
+   fOutputTree->Branch("fEventNumber", &fEventCounter);
 }
 
 
@@ -289,6 +296,10 @@ void AliReducedAnalysisJpsi2ee::Process() {
      AliReducedVarManager::FillEventOnlineTrigger(ibit, fValues);
      fHistosManager->FillHistClass("EventTriggers_AfterCuts", fValues);
   }
+  
+  // Fill the output tree
+  fOutputTree->Fill();
+  
 }
 
 

@@ -6,6 +6,7 @@
 #define ALIREDUCEDANALYSISJPSI2EE_H
 
 #include <TList.h>
+#include <TTree.h>
 
 #include "AliReducedAnalysisTaskSE.h"
 #include "AliReducedInfoCut.h"
@@ -49,6 +50,7 @@ public:
   // getters
   virtual AliHistogramManager* GetHistogramManager() const {return fHistosManager;}
   virtual AliMixingHandler* GetMixingHandler() const {return fMixingHandler;}
+  TTree* GetOutputTree () {return fOutputTree;}
   Int_t GetNTrackCuts() const {return fTrackCuts.GetEntries();}
   const Char_t* GetTrackCutName(Int_t i) const {return (i<fTrackCuts.GetEntries() ? fTrackCuts.At(i)->GetName() : "");} 
   Bool_t GetRunOverMC() {return fOptionRunOverMC;};
@@ -60,6 +62,7 @@ public:
 protected:
    AliHistogramManager* fHistosManager;   // Histogram manager
    AliMixingHandler*         fMixingHandler;    // mixing handler
+   TTree*               fOutputTree;      // Dirty fix to write out data in a tree
    
    Bool_t fOptionRunMixing;    // true: run event mixing, false: no event mixing
    Bool_t fOptionRunPairing;    // true: run pairing, false: only apply the track cuts
@@ -78,7 +81,9 @@ protected:
    TList fPrefilterPosTracks;  // list of prefilter selected positive tracks in the current event
    TList fPrefilterNegTracks; // list of prefilter selected negative tracks in the current event
    
+   // Variables used for the output tree
    ULong_t fEventCounter;   // event counter
+   
    
   Bool_t IsEventSelected(AliReducedBaseEvent* event, Float_t* values=0x0);
   Bool_t IsTrackSelected(AliReducedBaseTrack* track, Float_t* values=0x0);
