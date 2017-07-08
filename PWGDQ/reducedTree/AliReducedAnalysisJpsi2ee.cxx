@@ -43,7 +43,38 @@ AliReducedAnalysisJpsi2ee::AliReducedAnalysisJpsi2ee() :
   fNegTracks(),
   fPrefilterPosTracks(),
   fPrefilterNegTracks(),
-  fEventCounter(0)
+  fEventCounter(0),
+  fEventID(0),
+  fEventVtx(),
+  fEventVtxCovMat(),
+  fNegTrackParam(),
+  fNegTrackCovMat(),
+  fNegTrackCharge(0),
+  fNegTrackMCLabels(),
+  fNegTrackMCPdg(),
+  fNegTrackITScls(0),
+  fNegTrackTPCcls(0),
+  fNegTrackDCA(),
+  fNegTrackMotherP(),
+  fNegTrackFreezeout(),
+  fNegTrackFreezeoutMother(),
+  fPosTrackParam(),
+  fPosTrackCovMat(),
+  fPosTrackCharge(0),
+  fPosTrackMCLabels(),
+  fPosTrackMCPdg(),
+  fPosTrackITScls(0),
+  fPosTrackTPCcls(0),
+  fPosTrackDCA(),
+  fPosTrackMotherP(),
+  fPosTrackFreezeout(),
+  fPosTrackFreezeoutMother(),
+  fType(-1),
+  fMassV0(0),
+  fPtV0(0),
+  fCentrality(0),
+  fZVtxV0(0),
+  fRPV0(0)
 {
   //
   // default constructor
@@ -71,7 +102,38 @@ AliReducedAnalysisJpsi2ee::AliReducedAnalysisJpsi2ee(const Char_t* name, const C
   fNegTracks(),
   fPrefilterPosTracks(),
   fPrefilterNegTracks(),
-  fEventCounter(0)
+  fEventCounter(0),
+  fEventID(0),
+  fEventVtx(),
+  fEventVtxCovMat(),
+  fNegTrackParam(),
+  fNegTrackCovMat(),
+  fNegTrackCharge(0),
+  fNegTrackMCLabels(),
+  fNegTrackMCPdg(),
+  fNegTrackITScls(0),
+  fNegTrackTPCcls(0),
+  fNegTrackDCA(),
+  fNegTrackMotherP(),
+  fNegTrackFreezeout(),
+  fNegTrackFreezeoutMother(),
+  fPosTrackParam(),
+  fPosTrackCovMat(),
+  fPosTrackCharge(0),
+  fPosTrackMCLabels(),
+  fPosTrackMCPdg(),
+  fPosTrackITScls(0),
+  fPosTrackTPCcls(0),
+  fPosTrackDCA(),
+  fPosTrackMotherP(),
+  fPosTrackFreezeout(),
+  fPosTrackFreezeoutMother(),
+  fType(-1),
+  fMassV0(0),
+  fPtV0(0),
+  fCentrality(0),
+  fZVtxV0(0),
+  fRPV0(0)
 {
   //
   // named constructor
@@ -85,6 +147,28 @@ AliReducedAnalysisJpsi2ee::AliReducedAnalysisJpsi2ee(const Char_t* name, const C
    fNegTracks.SetOwner(kFALSE);
    fPrefilterPosTracks.SetOwner(kFALSE);
    fPrefilterNegTracks.SetOwner(kFALSE);
+   
+   for(Int_t i=0;i<3;++i) {fEventVtx[i]=-999.;}
+   for(Int_t i=0;i<6;++i) {fEventVtxCovMat[i]=-999.;}
+   
+   for(Int_t i=0;i<6;++i) {fNegTrackParam[i]=-999.;}
+   for(Int_t i=0;i<21;++i) {fNegTrackCovMat[i]=-999.;}
+   for(Int_t i=0;i<4;++i) {fNegTrackMCLabels[i]=0.;}
+   for(Int_t i=0;i<4;++i) {fNegTrackMCPdg[i]=0.;}
+   for(Int_t i=0;i<2;++i) {fNegTrackDCA[i]=-999.;}
+   for(Int_t i=0;i<3;++i) {fNegTrackMotherP[i]=-999.;}
+   for(Int_t i=0;i<3;++i) {fNegTrackFreezeout[i]=-999.;}
+   for(Int_t i=0;i<3;++i) {fNegTrackFreezeoutMother[i]=-999.;}
+   
+   for(Int_t i=0;i<6;++i) {fPosTrackParam[i]=-999.;}
+   for(Int_t i=0;i<21;++i) {fPosTrackCovMat[i]=-999.;}
+   for(Int_t i=0;i<4;++i) {fPosTrackMCLabels[i]=0.;}
+   for(Int_t i=0;i<4;++i) {fPosTrackMCPdg[i]=0.;}
+   for(Int_t i=0;i<2;++i) {fPosTrackDCA[i]=-999.;}
+   for(Int_t i=0;i<3;++i) {fPosTrackMotherP[i]=-999.;}
+   for(Int_t i=0;i<3;++i) {fPosTrackFreezeout[i]=-999.;}
+   for(Int_t i=0;i<3;++i) {fPosTrackFreezeoutMother[i]=-999.;}
+  
 }
 
 
@@ -203,8 +287,40 @@ void AliReducedAnalysisJpsi2ee::Init() {
    fMixingHandler->SetHistogramManager(fHistosManager);
    
    // Initialize the output tree 
-   fOutputTree = new TTree("jpsi2eeTree", "fOutputTree");
-   fOutputTree->Branch("fEventNumber", &fEventCounter);
+   fOutputTree = new TTree("treeB2JPsi", "fOutputTree");
+   //fOutputTree->Branch("fEventNumber", &fEventCounter);
+   fOutputTree->Branch("fEventID", &fEventID);
+   fOutputTree->Branch("fEventVtx", fEventVtx, "fEventVtx[3]/D");
+   fOutputTree->Branch("fEventVtxCovMat", fEventVtxCovMat, "fEventVtxCovMat[6]/D");
+   fOutputTree->Branch("fNegTrackParam", fNegTrackParam, "fNegTrackParam[6]/D");
+   fOutputTree->Branch("fNegTrackCovMat", fNegTrackCovMat, "fNegTrackCovMat[21]/D");
+   fOutputTree->Branch("fNegTrackCharge", &fNegTrackCharge);
+   fOutputTree->Branch("fNegTrackMCLabels", fNegTrackMCLabels, "fNegTrackMCLabels[4]/I");
+   fOutputTree->Branch("fNegTrackMCPdg", fNegTrackMCPdg, "fNegTrackMCPdg[4]/I");
+   fOutputTree->Branch("fNegTrackITScls", &fNegTrackITScls);
+   fOutputTree->Branch("fNegTrackTPCcls", &fNegTrackTPCcls);
+   fOutputTree->Branch("fNegTrackDCA", fNegTrackDCA, "fNegTrackDCA[2]/D");
+   fOutputTree->Branch("fNegTrackMotherP", fNegTrackMotherP, "fNegTrackMotherP[3]/D");
+   fOutputTree->Branch("fNegTrackFreezeout", fNegTrackFreezeout, "fNegTrackFreezeout[3]/D");
+   fOutputTree->Branch("fNegTrackFreezeoutMother", fNegTrackFreezeoutMother,"fNegTrackFreezeoutMother[3]/D");
+   fOutputTree->Branch("fPosTrackParam", fPosTrackParam, "fPosTrackParam[6]/D");
+   fOutputTree->Branch("fPosTrackCovMat", fPosTrackCovMat, "fPosTrackCovMat[21]/D");
+   fOutputTree->Branch("fPosTrackCharge", &fPosTrackCharge);
+   fOutputTree->Branch("fPosTrackMCLabels", fPosTrackMCLabels, "fPosTrackMCLabels[4]/I");
+   fOutputTree->Branch("fPosTrackMCPdg", fPosTrackMCPdg, "fPosTrackMCPdg[4]/I");
+   fOutputTree->Branch("fPosTrackITScls", &fPosTrackITScls);
+   fOutputTree->Branch("fPosTrackTPCcls", &fPosTrackTPCcls);
+   fOutputTree->Branch("fPosTrackDCA", fPosTrackDCA, "fPosTrackDCA[2]/D"); 
+   fOutputTree->Branch("fPosTrackMotherP", fPosTrackMotherP, "fPosTrackMotherP[3]/D");
+   fOutputTree->Branch("fPosTrackFreezeout", fPosTrackFreezeout, "fPosTrackFreezeout[3]/D");
+   fOutputTree->Branch("fPosTrackFreezeoutMother", fPosTrackFreezeoutMother,"fPosTrackFreezeoutMother[3]/D");
+   fOutputTree->Branch("fType", &fType);
+   fOutputTree->Branch("fMassV0", &fMassV0);
+   fOutputTree->Branch("fPtV0", &fPtV0);
+   fOutputTree->Branch("fCentrality", &fCentrality);
+   fOutputTree->Branch("fZVtxV0", &fZVtxV0);
+   fOutputTree->Branch("fRPV0", &fRPV0);
+   
 }
 
 
@@ -297,9 +413,7 @@ void AliReducedAnalysisJpsi2ee::Process() {
      fHistosManager->FillHistClass("EventTriggers_AfterCuts", fValues);
   }
   
-  // Fill the output tree
-  fOutputTree->Fill();
-  
+
 }
 
 
@@ -449,6 +563,11 @@ void AliReducedAnalysisJpsi2ee::RunSameEventPairing(TString pairClass /*="PairSE
          if(IsPairSelected(fValues)) {
             FillPairHistograms(pTrack->GetFlags() & nTrack->GetFlags(), 1, pairClass, fOptionRunOverMC && IsMCTruth(pTrack, nTrack));    // 1 is for +- pairs 
             fValues[AliReducedVarManager::kNpairsSelected] += 1.0;
+            
+            // Write out the variables for the PM pairs in a tree for the JPsi to B analysis 
+            // 1 is for +- pairs 
+            FillTreeEvent( pTrack, nTrack, 1);
+              
          }
       }  // end loop over negative tracks
       
@@ -462,6 +581,11 @@ void AliReducedAnalysisJpsi2ee::RunSameEventPairing(TString pairClass /*="PairSE
             if(IsPairSelected(fValues)) {
                FillPairHistograms(pTrack->GetFlags() & pTrack2->GetFlags(), 0, pairClass);       // 0 is for ++ pairs 
                fValues[AliReducedVarManager::kNpairsSelected] += 1.0;
+               
+               // Write out the variables for the PP pairs in a tree for the JPsi to B analysis 
+               // 0 is for ++ pairs 
+               FillTreeEvent( pTrack, pTrack2, 0);
+               
             }
          }  // end loop over positive tracks
       }
@@ -481,12 +605,74 @@ void AliReducedAnalysisJpsi2ee::RunSameEventPairing(TString pairClass /*="PairSE
             if(IsPairSelected(fValues)) {
                FillPairHistograms(nTrack->GetFlags() & nTrack2->GetFlags(), 2, pairClass);      // 2 is for -- pairs
                fValues[AliReducedVarManager::kNpairsSelected] += 1.0;
+               
+               // Write out the variables for the MM pairs in a tree for the JPsi to B analysis 
+               // 2 is for -- pairs 
+               FillTreeEvent( nTrack, nTrack2, 2);
+               
             }
          }  // end loop over negative tracks
       }  // end loop over negative tracks
    }
 }
 
+//___________________________________________________________________________
+void AliReducedAnalysisJpsi2ee::FillTreeEvent(AliReducedTrackInfo* pTrack, AliReducedTrackInfo* nTrack, Int_t type) {
+  
+    // The names p and n tracks are just conventions, they will as well be used for the like sign pairs!
+    
+    // Event variables
+    fEventID = fEventCounter;
+    fEventVtx[0] = fValues[AliReducedVarManager::kVtxX];
+    fEventVtx[1] = fValues[AliReducedVarManager::kVtxY];
+    fEventVtx[2] = fValues[AliReducedVarManager::kVtxZ];
+    for( Int_t i=0; i<6; i++ ){
+      fEventVtxCovMat[i] = fValues[AliReducedVarManager::kVtxCovMat+i];
+    }
+    // Track parameters
+    for( Int_t i=0; i<6; i++ ){
+      fNegTrackParam[i] = nTrack->TrackParam(i);
+      fPosTrackParam[i] = pTrack->TrackParam(i);
+    } 
+    for( Int_t i=0; i<21; i++ ){
+      fNegTrackCovMat[i] = nTrack->CovMatrix(i);
+      fPosTrackCovMat[i] = pTrack->CovMatrix(i);
+    } 
+    fNegTrackCharge = nTrack->Charge();
+    fPosTrackCharge = pTrack->Charge();
+      for( Int_t i=0; i<4; i++ ){
+      fNegTrackMCLabels[i] = nTrack->MCLabel(i);
+      fPosTrackMCLabels[i] = pTrack->MCLabel(i);
+      fNegTrackMCPdg[i] = nTrack->MCPdg(i);
+      fPosTrackMCPdg[i] = pTrack->MCPdg(i);    
+    }    
+    fNegTrackITScls = nTrack->ITSncls();
+    fPosTrackITScls = pTrack->ITSncls();
+    fNegTrackTPCcls = nTrack->TPCncls();
+    fPosTrackTPCcls = pTrack->TPCncls();
+    fNegTrackDCA[0] = nTrack->DCAxy();
+    fPosTrackDCA[0] = pTrack->DCAxy();
+    fNegTrackDCA[1] = nTrack->DCAz();
+    fPosTrackDCA[1] = pTrack->DCAz(); 
+    GetMotherMCMomentum(nTrack->MCLabel(1), fNegTrackMotherP);
+    GetMotherMCMomentum(pTrack->MCLabel(1), fPosTrackMotherP);
+    for( Int_t i=0; i<3; i++ ){
+      fNegTrackFreezeout[i] = nTrack->MCFreezeout(i);
+      fPosTrackFreezeout[i] = pTrack->MCFreezeout(i);
+    } 
+    GetMotherProdVtx(nTrack->MCLabel(1), fNegTrackFreezeoutMother);
+    GetMotherProdVtx(pTrack->MCLabel(1), fPosTrackFreezeoutMother);
+    // V0 values
+    fType = type;
+    fMassV0 = fValues[AliReducedVarManager::kMass];
+    fPtV0 = fValues[AliReducedVarManager::kPt];
+    fCentrality = fValues[AliReducedVarManager::kCentVZERO];
+    fZVtxV0 = fValues[AliReducedVarManager::kVtxZ];
+    fRPV0 = fValues[AliReducedVarManager::kVZERORP+6+1];
+    
+    // Fill the V0 event
+    fOutputTree->Fill();    
+}
 
 //___________________________________________________________________________
 void AliReducedAnalysisJpsi2ee::RunPrefilter() {
@@ -665,4 +851,38 @@ void AliReducedAnalysisJpsi2ee::FindJpsiTruthLegs(AliReducedTrackInfo* mother, I
    }
    return;
 }
+
+//___________________________________________________________________________
+void AliReducedAnalysisJpsi2ee::GetMotherProdVtx(Int_t mcLabel, Double_t *vtx) {
+  
+   AliReducedTrackInfo* track=0x0;
+   TClonesArray* trackList = fEvent->GetTracks();
+   TIter nextTrack(trackList);
+   for(Int_t it=0; it<fEvent->NTracks(); ++it) {
+      track = (AliReducedTrackInfo*)nextTrack();
+      if(track->MCLabel(0)==mcLabel) {
+        vtx[0] = track->MCFreezeout(0);
+        vtx[1] = track->MCFreezeout(1);
+        vtx[2] = track->MCFreezeout(2);
+      }
+   }
+}
+
+//___________________________________________________________________________
+void AliReducedAnalysisJpsi2ee::GetMotherMCMomentum(Int_t mcLabel, Double_t *mom) {
+  
+   AliReducedTrackInfo* track=0x0;
+   TClonesArray* trackList = fEvent->GetTracks();
+   TIter nextTrack(trackList);
+   for(Int_t it=0; it<fEvent->NTracks(); ++it) {
+      track = (AliReducedTrackInfo*)nextTrack();
+      if(track->MCLabel(0)==mcLabel) {
+        mom[0] = track->MCmom(0);
+        mom[1] = track->MCmom(1);
+        mom[2] = track->MCmom(2);
+      }
+   }
+}
+
+
 

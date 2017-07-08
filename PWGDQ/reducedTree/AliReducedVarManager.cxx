@@ -411,6 +411,10 @@ void AliReducedVarManager::FillEventInfo(BASEEVENT* baseEvent, Float_t* values, 
   values[kVtxZspd]              = event->VertexSPD(2);
   values[kNVtxSPDContributors]  = event->VertexSPDContributors();
   
+  for( Int_t i=0; i<6; i++ ){
+    values[kVtxCovMat+i]         = event->VertexCovMatrix(i);
+  }
+  
   if(fgUsedVars[kDeltaVtxZ]) values[kDeltaVtxZ] = values[kVtxZ] - values[kVtxZtpc];
   if(fgUsedVars[kDeltaVtxZspd]) values[kDeltaVtxZspd] = values[kVtxZ] - values[kVtxZspd];
   
@@ -1174,6 +1178,14 @@ void AliReducedVarManager::FillTrackInfo(BASETRACK* p, Float_t* values) {
       values[kEMCALmatchedEOverP] = (TMath::Abs(mom)>1.e-8 && cluster ? values[kEMCALmatchedEnergy]/mom : -999.0);
     }
   }  
+  
+  for( Int_t i=0; i<6; i++ ){
+    values[kTrackParam+i]         = pinfo->TrackParam(i);
+  }
+  for( Int_t i=0; i<21; i++ ){
+    values[kTrackCovMat+i]        = pinfo->CovMatrix(i);
+  }
+  
 
   FillTrackingStatus(pinfo,values);
   FillTrackingFlags(pinfo,values);

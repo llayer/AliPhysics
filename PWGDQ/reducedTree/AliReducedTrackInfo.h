@@ -83,7 +83,9 @@ class AliReducedTrackInfo : public AliReducedBaseTrack {
   
   Float_t TrackParam(Int_t iPar = 0) {return (iPar>=0 && iPar<6 ? fTrackParam[iPar] : 0.0);}
   Float_t CovMatrix(Int_t iCov = 0) {return (iCov>=0 && iCov<21 ? fCovMatrix[iCov] : 0.0);}
-  
+ 
+  //Float_t ConversionMass() {return fConversionMass;}
+ 
   Float_t MCmom(Int_t dim) {return (dim>=0 && dim<3 ? fMCMom[dim] : 0.0);}
   Float_t PtMC() {return TMath::Sqrt(fMCMom[0]*fMCMom[0]+fMCMom[1]*fMCMom[1]);}
   Float_t PMC()   const {return TMath::Sqrt(fMCMom[0]*fMCMom[0]+fMCMom[1]*fMCMom[1]+fMCMom[2]*fMCMom[2]);}
@@ -97,8 +99,9 @@ class AliReducedTrackInfo : public AliReducedBaseTrack {
   Int_t MCPdg(Int_t history=0) {return (history>=0 && history<4 ? fMCPdg[history] : -9999);}
   Short_t MCGeneratorIndex() {return fMCGeneratorIndex;}
   
-
-     
+  //void  SetConversionMass(Float_t mass){fConversionMass = mass;}
+  void SetMass(Float_t mass){fMassForTracking=mass;}
+  
  protected:
   UShort_t fTrackId;            // track id 
   ULong_t fStatus;              // tracking status
@@ -155,7 +158,8 @@ class AliReducedTrackInfo : public AliReducedBaseTrack {
   // Track parameters stored at the primary vertex
   Float_t fTrackParam[6];     // parameters: x, y, z, px, py, pz
   Float_t fCovMatrix[21];     // covariance matrix for the track parameter
-  
+ 
+  //Float_t fConversionMass;    // Store lowest mass with all other tracks 
   
   // Monte-Carlo truth information
   Float_t fMCMom[3];             // MC truth 3-momentum information in cartezian coordinates

@@ -213,6 +213,7 @@ class AliReducedVarManager : public TObject {
     kVtxX,              // vtx X                      
     kVtxY,              // vtx Y                      
     kVtxZ,              // vtx Z 
+    kVtxCovMat,         // vtx covariance matrix
     kVtxXtpc,           // vtx X from tpc
     kVtxYtpc,           // vtx Y from tpc
     kVtxZtpc,           // vtx Z from tpc
@@ -376,6 +377,8 @@ class AliReducedVarManager : public TObject {
     kNEventVars,                               // number of event variables  
     // Particle variables --------------------------------------
     // Common pair/track variables
+    kTrackParam,
+    kTrackCovMat,
     kPt=kNEventVars,
     kPtMC,
     kPtMCfromLegs,             // MC truth pt computed using the decay leg kinematics

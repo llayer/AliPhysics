@@ -13,6 +13,7 @@
 
 #include <TObject.h>
 #include <TString.h> 
+#include <TTree.h>
 
 #include "AliReducedVarManager.h"
 #include "AliHistogramManager.h"
@@ -42,6 +43,7 @@ public:
   // getters
   //AliHistogramManager* GetHistogramManager() const {return fHistosManager;}
   virtual AliHistogramManager* GetHistogramManager() const = 0;  //{return 0x0;}
+  virtual TTree* GetOutputTree() const = 0;
   AliReducedBaseEvent* GetEvent() const {return fEvent;}
   
 protected:

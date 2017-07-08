@@ -5,6 +5,8 @@
 #ifndef ALIREDUCEDANALYSISJPSI2EE_H
 #define ALIREDUCEDANALYSISJPSI2EE_H
 
+#include <vector>
+
 #include <TList.h>
 #include <TTree.h>
 
@@ -50,7 +52,7 @@ public:
   // getters
   virtual AliHistogramManager* GetHistogramManager() const {return fHistosManager;}
   virtual AliMixingHandler* GetMixingHandler() const {return fMixingHandler;}
-  TTree* GetOutputTree () {return fOutputTree;}
+  virtual TTree* GetOutputTree() const {return fOutputTree;}
   Int_t GetNTrackCuts() const {return fTrackCuts.GetEntries();}
   const Char_t* GetTrackCutName(Int_t i) const {return (i<fTrackCuts.GetEntries() ? fTrackCuts.At(i)->GetName() : "");} 
   Bool_t GetRunOverMC() {return fOptionRunOverMC;};
@@ -83,6 +85,46 @@ protected:
    
    // Variables used for the output tree
    ULong_t fEventCounter;   // event counter
+   //Int_t   fTestVar;
+   //std::vector<float> fMassV0;
+   
+   // Variables for the V0 event
+   // Event
+   Int_t    fEventID;
+   Double_t fEventVtx[3];
+   Double_t fEventVtxCovMat[6];
+   // Negative track
+   Double_t fNegTrackParam[6];
+   Double_t fNegTrackCovMat[21];
+   Double_t fNegTrackCharge;
+   Int_t    fNegTrackMCLabels[4];
+   Int_t    fNegTrackMCPdg[4];
+   Int_t    fNegTrackITScls;
+   Int_t    fNegTrackTPCcls;
+   Double_t fNegTrackDCA[2];
+   Double_t fNegTrackMotherP[3];
+   Double_t fNegTrackFreezeout[3];
+   Double_t fNegTrackFreezeoutMother[3];
+   // Positive track
+   Double_t fPosTrackParam[6];
+   Double_t fPosTrackCovMat[21];
+   Double_t fPosTrackCharge;
+   Int_t    fPosTrackMCLabels[4];  
+   Int_t    fPosTrackMCPdg[4];
+   Int_t    fPosTrackITScls;
+   Int_t    fPosTrackTPCcls;
+   Double_t fPosTrackDCA[2];
+   Double_t fPosTrackMotherP[3];
+   Double_t fPosTrackFreezeout[3];
+   Double_t fPosTrackFreezeoutMother[3];
+   // Pair variables
+   Int_t    fType;
+   Double_t fMassV0;
+   Double_t fPtV0;
+   Double_t fCentrality;
+   Double_t fZVtxV0;
+   Double_t fRPV0;
+   
    
    
   Bool_t IsEventSelected(AliReducedBaseEvent* event, Float_t* values=0x0);
@@ -93,6 +135,8 @@ protected:
   Bool_t IsMCTruth(AliReducedTrackInfo* ptrack, AliReducedTrackInfo* ntrack);
   Bool_t IsMCTruth(AliReducedTrackInfo* track);
   void    FindJpsiTruthLegs(AliReducedTrackInfo* mother, Int_t& leg1, Int_t& leg2);
+  void GetMotherMCMomentum(Int_t mcLabel, Double_t *mom);
+  void GetMotherProdVtx(Int_t mcLabel, Double_t *vtx);
   
   void RunPrefilter();
   void RunSameEventPairing(TString pairClass = "PairSE");
@@ -101,6 +145,8 @@ protected:
   void FillTrackHistograms(AliReducedTrackInfo* track, TString trackClass = "Track");
   void FillPairHistograms(ULong_t mask, Int_t pairType, TString pairClass = "PairSE", Bool_t isMCTruth = kFALSE);
   void FillMCTruthHistograms();
+  void FillTreeEvent(AliReducedTrackInfo* pTrack, AliReducedTrackInfo* nTrack, Int_t type = -1);
+  
   
   ClassDef(AliReducedAnalysisJpsi2ee,3);
 };

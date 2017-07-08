@@ -113,7 +113,7 @@ void AliAnalysisTaskReducedEventProcessor::UserCreateOutputObjects()
   //
   fReducedTask->GetHistogramManager()->AddHistogramsToOutputList();
   PostData(1, fReducedTask->GetHistogramManager()->GetHistogramOutputList());
-  PostData(2, fReducedTask->GetGetOutputTree());
+  PostData(2, fReducedTask->GetOutputTree());
   //fReducedTask->Init();                                       
   //for(Int_t i=0; i<fNoutputSlots; i++)   DefineOutput(1, fOutputSlot[i]->Class());
   return;
@@ -148,7 +148,7 @@ void AliAnalysisTaskReducedEventProcessor::UserExec(Option_t *){
   fReducedTask->SetEvent(event);
   fReducedTask->Process();
   PostData(1, fReducedTask->GetHistogramManager()->GetHistogramOutputList());
-  PostData(2, fReducedTask->GetGetOutputTree());
+  PostData(2, fReducedTask->GetOutputTree());
   ++fEventNumber;
   //for(Int_t i=0; i<fNoutputSlots; i++)   if(fContainerType[i]==1) PostData(i, fOutputSlot[i]);
 } 
@@ -165,6 +165,6 @@ void AliAnalysisTaskReducedEventProcessor::FinishTaskOutput()
   //for(Int_t i=0; i<fNoutputSlots; i++)   if(fContainerType[i]==0) PostData(i, fOutputSlot[i]);
   PostData(1, fReducedTask->GetHistogramManager()->GetHistogramOutputList());
   cout << "AliAnalysisTaskReducedEventProcessor::FinishTaskOutput() 1 " << endl;
-  PostData(2, fReducedTask->GetGetOutputTree());
+  PostData(2, fReducedTask->GetOutputTree());
   return;
 }
